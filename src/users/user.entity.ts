@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { hashPassword } from 'src/utils/hash';
 import {
   Column,
@@ -6,7 +7,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   BeforeInsert,
-  BeforeUpdate,
 } from 'typeorm';
 
 @Entity()
@@ -24,6 +24,7 @@ export class User {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @CreateDateColumn()
