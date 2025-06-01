@@ -6,6 +6,7 @@ import { ItemsModule } from './items/items.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/user.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   controllers: [AppController],
@@ -30,6 +31,7 @@ import { User } from './users/user.entity';
         synchronize: true,
       }),
     }),
+    AuthModule,
   ],
 })
 export class AppModule {}

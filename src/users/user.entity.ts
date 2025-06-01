@@ -1,5 +1,4 @@
 import { Exclude } from 'class-transformer';
-import { hashPassword } from 'src/utils/hash';
 import {
   Column,
   Entity,
@@ -32,11 +31,6 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @BeforeInsert()
-  hashPasswordInsert() {
-    this.password = hashPassword(this.password);
-  }
 
   @BeforeInsert()
   lowercaseEmail() {
