@@ -15,7 +15,7 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  find(email: string) {
+  find(email?: string) {
     return this.userRepository.find({ where: { email } });
   }
 

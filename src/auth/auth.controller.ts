@@ -9,11 +9,11 @@ import {
 import { AuthService } from './auth.service';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
-import { Serialize } from '@/interceptor/serialize.interceptor';
-import { UserDto } from '@/users/dtos/user.dto';
+import { Serialize } from '../interceptor/serialize.interceptor';
+import { UserDto } from '../users/dtos/user.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
-import { User } from '@/users/user.entity';
+import { User } from '../users/user.entity';
 
 @Controller('auth')
 @Serialize(UserDto)

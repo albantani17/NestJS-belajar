@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -7,15 +7,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/user.entity';
 import { AuthModule } from './auth/auth.module';
+import cookieSession = require('cookie-session');
 
 @Module({
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'APP_PIPE',
+      useValue: new ValidationPipe({
+        whitelist: true,
+      }),
+    },
+  ],
   imports: [
     UsersModule,
     ItemsModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -34,4 +44,12 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    const secret = process.env.SECRET;
+    if (!secret) throw new Error('Secret is not defined');
+    consumer
+      .apply(cookieSession({ keys: [secret], maxAge: 24 * 60 * 60 * 1000 }))
+      .forRoutes('*');
+  }
+}

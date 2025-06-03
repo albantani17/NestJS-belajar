@@ -1,14 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
-import cookieSession = require('cookie-session');
+import { setupApp } from './setup-app';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const secret = process.env.SECRET;
-  if (!secret) throw new Error('Secret is not defined');
-  app.use(cookieSession({ keys: [secret], maxAge: 24 * 60 * 60 * 1000 }));
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  // setupApp(app);
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

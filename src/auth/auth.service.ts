@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { promisify } from 'util';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 
@@ -17,8 +17,11 @@ export class AuthService {
     const salt = randomBytes(8).toString('hex');
     const hashedPassword = (await scyrpt(data.password, salt, 64)) as Buffer;
 
-    data.password = `${salt}.${hashedPassword.toString('hex')}`;
-    return this.userService.create(data);
+    const payload = {
+      ...data,
+      password: `${salt}.${hashedPassword.toString('hex')}`,
+    };
+    return this.userService.create(payload);
   }
 
   async login(email: string, password: string) {
@@ -30,8 +33,9 @@ export class AuthService {
 
     const hashPassword = (await scyrpt(password, salt, 64)) as Buffer;
 
-    if (storedHash !== hashPassword.toString('hex'))
+    if (storedHash !== hashPassword.toString('hex')) {
       throw new BadRequestException('Invalid password');
+    }
 
     return user;
   }
